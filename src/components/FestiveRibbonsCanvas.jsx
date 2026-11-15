@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function FestiveRibbonsCanvas() {
+function FestiveRibbonsCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -361,8 +361,10 @@ export default function FestiveRibbonsCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none z-10"
-      style={{ width: '100%', height: '100%' }}
+      className="fixed inset-0 w-full h-full pointer-events-none z-10 transform-gpu will-change-transform"
+      style={{ width: '100%', height: '100%', transform: 'translateZ(0)' }}
     />
   );
 }
+
+export default React.memo(FestiveRibbonsCanvas);

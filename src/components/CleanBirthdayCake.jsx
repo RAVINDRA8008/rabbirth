@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function CleanBirthdayCake({ candleBlown }) {
+function CleanBirthdayCake({ candleBlown }) {
   // Precise flame coordinates on cake.gif (1000x1000)
   const flames = [
     { left: '38.2%', top: '27.2%', width: '20px', height: '28px', delay: '0s' },
@@ -26,23 +26,23 @@ export default function CleanBirthdayCake({ candleBlown }) {
         <img
           src="./cake.gif"
           alt="Birthday Cake for Rabbit"
-          className={`w-full h-auto drop-shadow-md pointer-events-none transition-transform duration-500 ${
+          className={`w-full h-auto pointer-events-none transform-gpu ${
             candleBlown ? 'cake-blow-reaction' : ''
           }`}
         />
 
         {/* When candles are blown out: Mask out the flames and show realistic rising procedural smoke & embers */}
         {candleBlown && (
-          <div className="absolute inset-0 pointer-events-none animate-fadeIn">
+          <div className="absolute inset-0 pointer-events-none animate-fadeIn transform-gpu">
             {flames.map((flame, idx) => (
               <div
                 key={idx}
                 style={{ left: flame.left, top: flame.top }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+                className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transform-gpu"
               >
-                {/* Procedural Delicate Wispy Smoke Plume */}
+                {/* Procedural Delicate Wispy Smoke Plume - 100% GPU Composited without expensive filter drop-shadow */}
                 <div
-                  className="animate-smokeWisp pointer-events-none"
+                  className="animate-smokeWisp pointer-events-none transform-gpu will-change-transform"
                   style={{ animationDelay: flame.delay }}
                 >
                   <svg
@@ -51,18 +51,18 @@ export default function CleanBirthdayCake({ candleBlown }) {
                     viewBox="0 0 24 40"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="opacity-70 filter drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+                    className="opacity-75"
                   >
                     <path
                       d="M12 38C10 32 14 26 11 20C8 14 15 8 12 2"
-                      stroke="rgba(240, 235, 230, 0.85)"
-                      strokeWidth="2.2"
+                      stroke="rgba(255, 255, 255, 0.95)"
+                      strokeWidth="2.4"
                       strokeLinecap="round"
                     />
                     <path
                       d="M13 36C15 30 11 24 13 18C15 12 11 6 13 3"
-                      stroke="rgba(210, 200, 195, 0.6)"
-                      strokeWidth="1.4"
+                      stroke="rgba(230, 220, 215, 0.7)"
+                      strokeWidth="1.5"
                       strokeLinecap="round"
                     />
                   </svg>
@@ -73,12 +73,12 @@ export default function CleanBirthdayCake({ candleBlown }) {
                   style={{ width: flame.width, height: flame.height }}
                   className="rounded-full bg-[#FFDAB9] flex items-end justify-center -mt-2"
                 >
-                  {/* Extinguished little candle wick with incandescent glowing ember tip */}
+                  {/* Extinguished candle wick with incandescent glowing ember tip (GPU accelerated, zero repaints) */}
                   <div className="relative flex flex-col items-center">
-                    {/* Ember tip */}
-                    <div className="w-[3px] h-[3px] rounded-full animate-emberCooling" />
+                    {/* Glowing Ember Halo - animates transform & opacity, never box-shadow */}
+                    <div className="w-[4px] h-[4px] rounded-full bg-[#FF4500] animate-emberGlow transform-gpu" />
                     {/* Charcoal wick */}
-                    <div className="w-[2px] h-2.5 bg-neutral-900 rounded-b-sm" />
+                    <div className="w-[2px] h-2.5 bg-neutral-900 rounded-b-sm -mt-0.5" />
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export default function CleanBirthdayCake({ candleBlown }) {
 
       {/* Sweet Birthday Wish Confirmation Box with Spring Overshoot */}
       {candleBlown && (
-        <div className="mt-1 px-4 py-1.5 rounded-2xl bg-white/95 border-2 border-pink-300 shadow-md text-center max-w-sm animate-wishCardSpring">
+        <div className="mt-1 px-4 py-1.5 rounded-2xl bg-white/95 border-2 border-pink-300 shadow-md text-center max-w-sm animate-wishCardSpring transform-gpu">
           <div className="font-display font-bold text-xs sm:text-sm text-[#C4515C] flex items-center justify-center gap-1.5">
             <span>✨</span>
             <span>Your Birthday Wish Has Been Made!</span>
@@ -103,3 +103,5 @@ export default function CleanBirthdayCake({ candleBlown }) {
     </div>
   );
 }
+
+export default React.memo(CleanBirthdayCake);

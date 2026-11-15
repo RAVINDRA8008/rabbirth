@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function BirthdayCountdown() {
+function BirthdayCountdown() {
   const [timeLeft, setTimeLeft] = useState({
     days: '00',
     hours: '00',
@@ -114,3 +114,5 @@ export default function BirthdayCountdown() {
     </div>
   );
 }
+
+export default React.memo(BirthdayCountdown);

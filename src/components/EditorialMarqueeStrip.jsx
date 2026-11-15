@@ -1,17 +1,12 @@
 import React from 'react';
 
-export default function EditorialMarqueeStrip({ name = 'Rabbit' }) {
+function EditorialMarqueeStrip({ name = 'Rabbit' }) {
   // Repeating segment with golden diamond stars matching reference photo
   const items = Array.from({ length: 8 });
 
   return (
     <div className="w-full max-w-full flex flex-col items-center select-none z-20 my-0.5 sm:my-1.5 overflow-hidden">
-      {/* Editorial Kicker Tag */}
-      <div className="text-[9px] sm:text-[10px] font-sans tracking-[0.28em] uppercase text-[#7A3614] font-semibold mb-0.5 opacity-90">
-        ✦ AN EDITORIAL ODE ✦
-      </div>
-
-      {/* Poetic Subtitle matching user reference */}
+      {/* Poetic Subtitle matching user reference - Clean, romantic, no unwanted headers */}
       <p className="font-sans text-xs sm:text-sm text-[#4A2010] text-center max-w-xs sm:max-w-md px-4 mb-1.5 leading-snug sm:leading-relaxed font-semibold">
         If I had to design love as a website, this is how it would feel: dramatic, soft, a little chaotic, completely obsessed with you.
       </p>
@@ -46,3 +41,5 @@ export default function EditorialMarqueeStrip({ name = 'Rabbit' }) {
     </div>
   );
 }
+
+export default React.memo(EditorialMarqueeStrip);
