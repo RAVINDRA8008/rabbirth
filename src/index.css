@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: radial-gradient(circle at 50% 30%, #FFFDF9 0%, #FFF3F5 55%, #FDF0ED 100%);
+    color: #2D2424;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Custom Soft Rose-Gold Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFDF9;
+}
+::-webkit-scrollbar-thumb {
+  background: #FAD2E1;
+  border-radius: 4px;
+  border: 2px solid #FFFDF9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E8A598;
+}
+
+/* Dreamy Glow Card */
+.dream-card {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 20px 50px -15px rgba(224, 122, 95, 0.15), 0 0 1px 1px rgba(212, 175, 55, 0.2);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Floating Gentle Animation */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 3.5s ease-in-out infinite;
+}
+
+/* Candle Flame Natural Animation */
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    filter: drop-shadow(0 0 10px rgba(255, 170, 50, 0.9)) drop-shadow(0 0 24px rgba(255, 120, 50, 0.6));
+  }
+  25% {
+    transform: scale(1.06, 0.94) rotate(2deg);
+    filter: drop-shadow(0 0 14px rgba(255, 190, 60, 0.95)) drop-shadow(0 0 30px rgba(255, 130, 60, 0.7));
+  }
+  50% {
+    transform: scale(0.95, 1.05) rotate(-2deg);
+    filter: drop-shadow(0 0 8px rgba(255, 150, 40, 0.8)) drop-shadow(0 0 18px rgba(255, 110, 40, 0.5));
+  }
+  75% {
+    transform: scale(1.03, 1.01) rotate(1.5deg);
+    filter: drop-shadow(0 0 12px rgba(255, 180, 55, 0.9)) drop-shadow(0 0 26px rgba(255, 120, 50, 0.65));
+  }
+}
+
+.animate-flame {
+  animation: flameFlicker 2s infinite ease-in-out;
+}
