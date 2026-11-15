@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CleanBirthdayCake from './components/CleanBirthdayCake';
-import TypewriterText from './components/TypewriterText';
 import LetterDrawer from './components/LetterDrawer';
 import FestiveRibbonsCanvas from './components/FestiveRibbonsCanvas';
+import EditorialMarqueeStrip from './components/EditorialMarqueeStrip';
+import BirthdayCountdown from './components/BirthdayCountdown';
 
 export default function App() {
   const [candleBlown, setCandleBlown] = useState(false);
@@ -22,42 +23,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FFDAB9] flex flex-col justify-between py-4 px-4 sm:px-6 text-center select-none relative overflow-hidden">
+    <div className="min-h-screen w-full bg-[#FFDAB9] flex flex-col justify-between text-center select-none relative overflow-x-hidden pb-6">
       {/* Authentic Twisting Festive Streamers / Ribbons Physics Canvas */}
       <FestiveRibbonsCanvas />
 
-      {/* Top Festive Header Bar */}
-      <header className="relative z-20 w-full max-w-xl mx-auto flex flex-col items-center pt-2">
-        {/* Date Tag */}
-        <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-white/90 border border-pink-300 text-[#C4515C] text-xs font-bold uppercase tracking-wider shadow-sm">
-          <span>🎈</span>
-          <span>15th November · Born To Shine</span>
-          <span>🎈</span>
-        </div>
-
-        {/* Decorative Festive Bunting Pennants Banner */}
-        <div className="w-full flex justify-between items-start px-2 overflow-hidden pointer-events-none mt-2 max-w-md">
-          {['#FF477E', '#FFD166', '#06D6A0', '#118AB2', '#9D4EDD', '#EF476F', '#FFD166', '#06D6A0', '#FF477E'].map((color, i) => (
-            <div
-              key={i}
-              style={{ borderTopColor: color }}
-              className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[24px] drop-shadow-sm animate-festive"
-            />
-          ))}
-        </div>
+      {/* Header Area: Editorial Marquee Strip with Poetic Quote */}
+      <header className="relative z-20 w-full pt-4">
+        <EditorialMarqueeStrip name={name} />
       </header>
 
-      {/* Main Core Showcase: Name, Cake & The 2 Requested Buttons */}
-      <main className="relative z-20 max-w-lg mx-auto w-full flex flex-col items-center my-auto space-y-2">
-        {/* Joyful Festive Name */}
-        <div className="space-y-1">
-          <h1 className="text-5xl sm:text-6xl font-display font-black text-[#C4515C] tracking-tight uppercase animate-festive drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)]">
-            {name}
-          </h1>
-
-          {/* Smooth Warm Typewriter Greeting */}
-          <TypewriterText />
-        </div>
+      {/* Main Core Showcase: Countdown Timer, Cake & Action Buttons */}
+      <main className="relative z-20 max-w-lg mx-auto w-full flex flex-col items-center my-auto space-y-3 px-4">
+        {/* Cinematic Countdown Timer: Awaiting the Moment */}
+        <BirthdayCountdown />
 
         {/* Authentic Hand-Drawn Animated Birthday Cake */}
         <CleanBirthdayCake candleBlown={candleBlown} />
@@ -83,11 +61,11 @@ export default function App() {
       </main>
 
       {/* Clean Sweet Footer */}
-      <footer className="relative z-20 text-xs font-semibold text-[#8B4513]/90 tracking-wide pb-1">
+      <footer className="relative z-20 text-xs font-semibold text-[#8B4513]/90 tracking-wide pt-4">
         Made with love for {name} on November 15 💖
       </footer>
 
-      {/* Birthday Greeting Card Modal */}
+      {/* 10/10 Animated Envelope & Handwritten Greeting Card Modal */}
       <LetterDrawer isOpen={letterOpen} onClose={() => setLetterOpen(false)} />
     </div>
   );
