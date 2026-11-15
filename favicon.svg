@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF0F3" />
+      <stop offset="100%" stop-color="#FFD1DC" />
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#E27396" flood-opacity="0.3" />
+    </filter>
+  </defs>
+  <!-- Circle Badge -->
+  <circle cx="64" cy="64" r="58" fill="url(#bgGrad)" stroke="#F4ACB7" stroke-width="4" filter="url(#shadow)" />
+  
+  <!-- Bunny Face & Cake Graphic -->
+  <text x="64" y="60" font-size="46" text-anchor="middle" dominant-baseline="central">🐰</text>
+  <text x="86" y="88" font-size="34" text-anchor="middle" dominant-baseline="central">🎂</text>
+  <text x="34" y="36" font-size="24" text-anchor="middle" dominant-baseline="central">✨</text>
+</svg>
