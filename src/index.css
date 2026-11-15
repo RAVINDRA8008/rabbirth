@@ -100,52 +100,52 @@
   animation: flameFlicker 2s infinite ease-in-out;
 }
 
-/* Realistic Procedural Wispy Smoke Plume - 100% GPU Composited with translate3d */
-@keyframes smokeWisp {
+/* 100% GPU-Composited Wispy Smoke Plume (Zero Main-Thread Repaint) */
+@keyframes smokeWispGPU {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) scale(0.6) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(0.5);
   }
   15% {
-    opacity: 0.85;
-    transform: translate3d(-2px, -8px, 0) scale(0.9) rotate(-3deg);
+    opacity: 0.75;
+    transform: translate3d(-1px, -6px, 0) scale(0.85);
   }
   50% {
-    opacity: 0.6;
-    transform: translate3d(4px, -24px, 0) scale(1.25) rotate(6deg);
+    opacity: 0.45;
+    transform: translate3d(var(--drift-x, 3px), -20px, 0) scale(1.15);
   }
   80% {
-    opacity: 0.3;
-    transform: translate3d(-3px, -42px, 0) scale(1.6) rotate(-8deg);
+    opacity: 0.2;
+    transform: translate3d(calc(var(--drift-x, 3px) * 1.4), -34px, 0) scale(1.45);
   }
   100% {
     opacity: 0;
-    transform: translate3d(6px, -60px, 0) scale(2.0) rotate(12deg);
+    transform: translate3d(calc(var(--drift-x, 3px) * 1.8), -46px, 0) scale(1.75);
   }
 }
 
-.animate-smokeWisp {
+.animate-smokeWispGPU {
   will-change: transform, opacity;
-  animation: smokeWisp 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  animation: smokeWispGPU 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
 }
 
-/* Incandescent Ember Glow - 100% Transform & Opacity GPU Composited (Zero box-shadow repaints) */
+/* Incandescent Ember Tip Glow (Pure Opacity & Transform - Zero box-shadow re-renders) */
 @keyframes emberGlow {
   0% {
     opacity: 1;
-    transform: scale(1.5);
+    transform: scale(1.1);
   }
   40% {
     opacity: 0.85;
-    transform: scale(1.15);
+    transform: scale(0.95);
   }
-  75% {
+  80% {
     opacity: 0.4;
-    transform: scale(0.85);
+    transform: scale(0.8);
   }
   100% {
-    opacity: 0.15;
-    transform: scale(0.6);
+    opacity: 0;
+    transform: scale(0.5);
   }
 }
 
@@ -261,4 +261,86 @@
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* Music Equalizer Dancing Bars (100% GPU Composited with scaleY) */
+@keyframes eqBar1 {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1.0); }
+}
+@keyframes eqBar2 {
+  0%, 100% { transform: scaleY(0.95); }
+  50% { transform: scaleY(0.2); }
+}
+@keyframes eqBar3 {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(0.9); }
+}
+@keyframes eqBar4 {
+  0%, 100% { transform: scaleY(0.85); }
+  50% { transform: scaleY(0.3); }
+}
+
+.animate-eq1 {
+  transform-origin: bottom;
+  will-change: transform;
+  animation: eqBar1 0.75s ease-in-out infinite;
+}
+.animate-eq2 {
+  transform-origin: bottom;
+  will-change: transform;
+  animation: eqBar2 0.65s ease-in-out infinite 0.15s;
+}
+.animate-eq3 {
+  transform-origin: bottom;
+  will-change: transform;
+  animation: eqBar3 0.8s ease-in-out infinite 0.1s;
+}
+.animate-eq4 {
+  transform-origin: bottom;
+  will-change: transform;
+  animation: eqBar4 0.7s ease-in-out infinite 0.25s;
+}
+
+/* Floating Musical Notes for Audio Button */
+@keyframes floatNote {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.5) rotate(-10deg);
+  }
+  30% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(8px, -24px, 0) scale(1.1) rotate(14deg);
+  }
+}
+
+.animate-floatNote {
+  animation: floatNote 2.2s ease-out infinite;
+}
+
+/* Floating Golden Stardust Sparkle upon Candle Blow */
+@keyframes floatStardust {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.3) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate3d(var(--stardust-x, 6px), -20px, 0) scale(1.15) rotate(15deg);
+  }
+  75% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--stardust-x, 6px) * 1.8), -52px, 0) scale(0.2) rotate(35deg);
+  }
+}
+
+.animate-stardust {
+  animation: floatStardust 2.4s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  will-change: transform, opacity;
 }

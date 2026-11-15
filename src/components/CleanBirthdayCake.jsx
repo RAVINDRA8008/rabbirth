@@ -3,16 +3,16 @@ import React from 'react';
 function CleanBirthdayCake({ candleBlown }) {
   // Precise flame coordinates on cake.gif (1000x1000)
   const flames = [
-    { left: '38.2%', top: '27.2%', width: '20px', height: '28px', delay: '0s' },
-    { left: '42.9%', top: '25.2%', width: '20px', height: '28px', delay: '0.08s' },
-    { left: '48.0%', top: '21.2%', width: '22px', height: '32px', delay: '0.04s' },
-    { left: '53.6%', top: '25.2%', width: '20px', height: '28px', delay: '0.12s' },
-    { left: '59.0%', top: '25.2%', width: '20px', height: '28px', delay: '0.06s' },
-    { left: '62.6%', top: '30.2%', width: '18px', height: '26px', delay: '0.14s' },
+    { left: '38.2%', top: '27.2%', width: '20px', height: '28px', delay: '0s', drift: -6 },
+    { left: '42.9%', top: '25.2%', width: '20px', height: '28px', delay: '0.08s', drift: -3 },
+    { left: '48.0%', top: '21.2%', width: '22px', height: '32px', delay: '0.04s', drift: 2 },
+    { left: '53.6%', top: '25.2%', width: '20px', height: '28px', delay: '0.12s', drift: 5 },
+    { left: '59.0%', top: '25.2%', width: '20px', height: '28px', delay: '0.06s', drift: -2 },
+    { left: '62.6%', top: '30.2%', width: '18px', height: '26px', delay: '0.14s', drift: 6 },
   ];
 
   return (
-    <div className="relative flex flex-col items-center justify-center select-none">
+    <div className="relative flex flex-col items-center justify-center select-none transform-gpu">
       {/* Grounding Pedestal Radial Shadow */}
       <div className="absolute -bottom-1.5 w-48 sm:w-56 h-4 bg-amber-950/15 rounded-[100%] blur-md pointer-events-none" />
 
@@ -40,10 +40,13 @@ function CleanBirthdayCake({ candleBlown }) {
                 style={{ left: flame.left, top: flame.top }}
                 className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transform-gpu"
               >
-                {/* Procedural Delicate Wispy Smoke Plume - 100% GPU Composited without expensive filter drop-shadow */}
+                {/* 1. Procedural Delicate Wispy Smoke Plume - 100% GPU Composited */}
                 <div
-                  className="animate-smokeWisp pointer-events-none transform-gpu will-change-transform"
-                  style={{ animationDelay: flame.delay }}
+                  className="animate-smokeWispGPU pointer-events-none transform-gpu will-change-transform"
+                  style={{
+                    animationDelay: flame.delay,
+                    '--drift-x': `${flame.drift}px`,
+                  }}
                 >
                   <svg
                     width="20"
@@ -68,14 +71,25 @@ function CleanBirthdayCake({ candleBlown }) {
                   </svg>
                 </div>
 
-                {/* Flame Mask matching the #FFDAB9 background perfectly */}
+                {/* 2. Floating Golden Stardust Sparkle */}
+                <span
+                  className="absolute -top-3 text-[11px] text-amber-300 font-bold pointer-events-none select-none animate-stardust"
+                  style={{
+                    animationDelay: `${parseFloat(flame.delay) + 0.08}s`,
+                    '--stardust-x': `${flame.drift}px`,
+                  }}
+                >
+                  ✦
+                </span>
+
+                {/* 3. Flame Mask matching the #FFDAB9 background perfectly */}
                 <div
                   style={{ width: flame.width, height: flame.height }}
                   className="rounded-full bg-[#FFDAB9] flex items-end justify-center -mt-2"
                 >
-                  {/* Extinguished candle wick with incandescent glowing ember tip (GPU accelerated, zero repaints) */}
+                  {/* Extinguished candle wick with incandescent glowing ember tip */}
                   <div className="relative flex flex-col items-center">
-                    {/* Glowing Ember Halo - animates transform & opacity, never box-shadow */}
+                    {/* Glowing Ember Tip (GPU accelerated) */}
                     <div className="w-[4px] h-[4px] rounded-full bg-[#FF4500] animate-emberGlow transform-gpu" />
                     {/* Charcoal wick */}
                     <div className="w-[2px] h-2.5 bg-neutral-900 rounded-b-sm -mt-0.5" />
@@ -91,9 +105,9 @@ function CleanBirthdayCake({ candleBlown }) {
       {candleBlown && (
         <div className="mt-1 px-4 py-1.5 rounded-2xl bg-white/95 border-2 border-pink-300 shadow-md text-center max-w-sm animate-wishCardSpring transform-gpu">
           <div className="font-display font-bold text-xs sm:text-sm text-[#C4515C] flex items-center justify-center gap-1.5">
-            <span>✨</span>
+            <span className="inline-block animate-pulse">✨</span>
             <span>Your Birthday Wish Has Been Made!</span>
-            <span>✨</span>
+            <span className="inline-block animate-pulse delay-150">✨</span>
           </div>
           <p className="font-sans text-[10.5px] sm:text-xs text-neutral-600 font-medium">
             May every single dream in your heart come true this year, Rabbit! 💖

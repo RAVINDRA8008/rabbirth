@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti';
  * 2. goldLeafCascade: Floating 24K gold foil flakes with natural air drift
  * 3. balloonPopBurst: Instant high-velocity radial micro-explosion at exact screen coordinates
  * 4. cakeSliceFanfare: Sparkling starburst volley when cake is cut
+ * 5. candleStardustBurst: Gentle rising starlight & golden stars when candles are blown
  */
 
 // Haute Party Palettes
@@ -151,4 +152,40 @@ export function fireCakeCutFanfare() {
       shapes: ['circle'],
     });
   }, 180);
+}
+
+/**
+ * 5. Candle Stardust Burst: Rising golden stars and sparkles upon candle blow
+ */
+export function fireCandleStardustBurst() {
+  // Wave 1: Golden Stars shooting upwards from the cake
+  confetti({
+    particleCount: 38,
+    spread: 75,
+    angle: 90,
+    startVelocity: 32,
+    origin: { x: 0.5, y: 0.52 },
+    colors: ['#FFD700', '#FFE57F', '#FFAA00', '#FFFDF9', '#FF85A1'],
+    shapes: ['star'],
+    scalar: 1.25,
+    gravity: 0.62,
+    decay: 0.92,
+    ticks: 200,
+  });
+
+  // Wave 2: Micro champagne glitter flutter
+  setTimeout(() => {
+    confetti({
+      particleCount: 26,
+      spread: 90,
+      angle: 90,
+      startVelocity: 24,
+      origin: { x: 0.5, y: 0.48 },
+      colors: PALETTES.champagneRoyale,
+      gravity: 0.58,
+      decay: 0.93,
+      scalar: 0.95,
+      ticks: 180,
+    });
+  }, 140);
 }

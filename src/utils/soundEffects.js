@@ -2,9 +2,11 @@
 class SoundEngine {
   constructor() {
     this.ctx = null;
+    this.masterGain = null;
     this.isMuted = true; // start muted by default so it respects user preference
     this.musicTimer = null;
     this.isPlayingMusic = false;
+    this.activeOscillators = [];
   }
 
   init() {
@@ -12,6 +14,9 @@ class SoundEngine {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (AudioContext) {
         this.ctx = new AudioContext();
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.85, this.ctx.currentTime);
+        this.masterGain.connect(this.ctx.destination);
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
@@ -24,10 +29,35 @@ class SoundEngine {
     this.isMuted = !this.isMuted;
     if (this.isMuted) {
       this.stopMusic();
+      if (this.masterGain && this.ctx) {
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+      }
     } else {
+      if (this.masterGain && this.ctx) {
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(0.85, this.ctx.currentTime);
+      }
+      this.stopMusic();
       this.playBirthdayMelody();
     }
     return !this.isMuted;
+  }
+
+  stopMusic() {
+    this.isPlayingMusic = false;
+    if (this.musicTimer) {
+      clearTimeout(this.musicTimer);
+      this.musicTimer = null;
+    }
+    // Instantly stop and disconnect all scheduled oscillators
+    while (this.activeOscillators.length > 0) {
+      const osc = this.activeOscillators.pop();
+      try {
+        osc.stop();
+        osc.disconnect();
+      } catch (e) {}
+    }
   }
 
   // Cute Pop Sound for Balloons
@@ -46,7 +76,7 @@ class SoundEngine {
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
 
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.masterGain || this.ctx.destination);
 
       osc.start(now);
       osc.stop(now + 0.08);
@@ -70,7 +100,7 @@ class SoundEngine {
         gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.6);
 
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.masterGain || this.ctx.destination);
 
         osc.start(now + i * 0.08);
         osc.stop(now + i * 0.08 + 0.6);
@@ -94,7 +124,7 @@ class SoundEngine {
         gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.8);
 
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.masterGain || this.ctx.destination);
 
         osc.start(now + idx * 0.06);
         osc.stop(now + idx * 0.06 + 0.8);
@@ -104,52 +134,78 @@ class SoundEngine {
 
   // Procedural music box "Happy Birthday" melody (calm, gentle, sweet)
   playBirthdayMelody() {
-    if (this.isMuted || !this.ctx) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().then(() => {
+        if (!this.isMuted) this.playBirthdayMelody();
+      });
+      return;
+    }
+
+    this.isPlayingMusic = true;
+    this.stopMusic();
     this.isPlayingMusic = true;
 
-    // Melody: [frequency, duration in seconds]
+    // Melody in sweet music-box octave (C5 - C6): [frequency, duration in seconds]
     const notes = [
-      [261.63, 0.4], [261.63, 0.3], [293.66, 0.7], [261.63, 0.7], [349.23, 0.7], [329.63, 1.2],
-      [261.63, 0.4], [261.63, 0.3], [293.66, 0.7], [261.63, 0.7], [392.00, 0.7], [349.23, 1.2],
-      [261.63, 0.4], [261.63, 0.3], [523.25, 0.7], [440.00, 0.7], [349.23, 0.7], [329.63, 0.7], [293.66, 0.9],
-      [466.16, 0.4], [466.16, 0.3], [440.00, 0.7], [349.23, 0.7], [392.00, 0.7], [349.23, 1.4],
+      [523.25, 0.38], [523.25, 0.28], [587.33, 0.65], [523.25, 0.65], [698.46, 0.65], [659.25, 1.1],
+      [523.25, 0.38], [523.25, 0.28], [587.33, 0.65], [523.25, 0.65], [783.99, 0.65], [698.46, 1.1],
+      [523.25, 0.38], [523.25, 0.28], [1046.50, 0.65], [880.00, 0.65], [698.46, 0.65], [659.25, 0.65], [587.33, 0.85],
+      [932.33, 0.38], [932.33, 0.28], [880.00, 0.65], [698.46, 0.65], [783.99, 0.65], [698.46, 1.3],
     ];
 
-    let timeOffset = 0.1;
+    let timeOffset = 0.04;
     const now = this.ctx.currentTime;
 
     notes.forEach(([freq, dur]) => {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
+      if (this.isMuted) return;
 
-      osc.type = 'triangle'; // sweet music box timbre
-      osc.frequency.setValueAtTime(freq, now + timeOffset);
+      // 1. Primary Music Box Tine (Triangle)
+      const osc1 = this.ctx.createOscillator();
+      const gain1 = this.ctx.createGain();
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now + timeOffset);
 
-      gain.gain.setValueAtTime(0.12, now + timeOffset);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + dur);
+      gain1.gain.setValueAtTime(0.0001, now + timeOffset);
+      gain1.gain.linearRampToValueAtTime(0.28, now + timeOffset + 0.015);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + timeOffset + dur);
 
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      osc1.connect(gain1);
+      gain1.connect(this.masterGain || this.ctx.destination);
 
-      osc.start(now + timeOffset);
-      osc.stop(now + timeOffset + dur);
+      osc1.start(now + timeOffset);
+      osc1.stop(now + timeOffset + dur);
+      this.activeOscillators.push(osc1);
+
+      // 2. Sparkling Overtone Shimmer (Sine Harmonic)
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, now + timeOffset);
+
+      gain2.gain.setValueAtTime(0.0001, now + timeOffset);
+      gain2.gain.linearRampToValueAtTime(0.08, now + timeOffset + 0.01);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + timeOffset + dur * 0.7);
+
+      osc2.connect(gain2);
+      gain2.connect(this.masterGain || this.ctx.destination);
+
+      osc2.start(now + timeOffset);
+      osc2.stop(now + timeOffset + dur * 0.7);
+      this.activeOscillators.push(osc2);
 
       timeOffset += dur;
     });
 
     // Loop the melody gently
     this.musicTimer = setTimeout(() => {
-      if (!this.isMuted) {
+      if (!this.isMuted && this.isPlayingMusic) {
         this.playBirthdayMelody();
       }
-    }, timeOffset * 1000 + 1500);
-  }
-
-  stopMusic() {
-    this.isPlayingMusic = false;
-    if (this.musicTimer) {
-      clearTimeout(this.musicTimer);
-    }
+    }, timeOffset * 1000 + 1200);
   }
 }
 
