@@ -10,11 +10,11 @@
 
 @layer base {
   body {
-    background: radial-gradient(circle at 50% 30%, #FFFDF9 0%, #FFF3F5 55%, #FDF0ED 100%);
+    background-color: #FFDAB9;
     color: #2D2424;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    min-height: 100vh;
-    overflow: hidden;
+    min-height: 100dvh;
+    overflow-x: hidden;
   }
 
   h1, h2, h3 {
@@ -27,12 +27,12 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFFDF9;
+  background: #FFDAB9;
 }
 ::-webkit-scrollbar-thumb {
   background: #FAD2E1;
   border-radius: 4px;
-  border: 2px solid #FFFDF9;
+  border: 2px solid #FFDAB9;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #E8A598;
@@ -50,7 +50,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(8px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -62,7 +62,7 @@
   animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Floating Gentle Animation */
+/* Gentle Floating Animation */
 @keyframes floatGentle {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -100,6 +100,103 @@
   animation: flameFlicker 2s infinite ease-in-out;
 }
 
+/* Realistic Procedural Wispy Smoke Plume */
+@keyframes smokeWisp {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+  }
+  15% {
+    opacity: 0.85;
+    transform: translate(-2px, -8px) scale(0.9) rotate(-3deg);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(4px, -24px) scale(1.25) rotate(6deg);
+  }
+  80% {
+    opacity: 0.3;
+    transform: translate(-3px, -42px) scale(1.6) rotate(-8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(6px, -60px) scale(2.0) rotate(12deg);
+  }
+}
+
+.animate-smokeWisp {
+  animation: smokeWisp 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* Incandescent Ember Cooling Tip */
+@keyframes emberCooling {
+  0% {
+    background-color: #FF4500;
+    box-shadow: 0 0 8px #FF4500, 0 0 14px rgba(255, 69, 0, 0.6);
+  }
+  40% {
+    background-color: #FF8C00;
+    box-shadow: 0 0 5px #FF8C00;
+  }
+  80% {
+    background-color: #8B4513;
+    box-shadow: 0 0 2px rgba(139, 69, 19, 0.4);
+  }
+  100% {
+    background-color: #2D2424;
+    box-shadow: none;
+  }
+}
+
+.animate-emberCooling {
+  animation: emberCooling 2.2s ease-out forwards;
+}
+
+/* Cake Wind Reaction upon Blow */
+@keyframes cakeBlowReaction {
+  0% { transform: scale(1); }
+  25% { transform: scale(0.985) translateY(2px); }
+  60% { transform: scale(1.015) translateY(-1px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.cake-blow-reaction {
+  animation: cakeBlowReaction 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Wish Card Spring Overshoot */
+@keyframes wishCardSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-wishCardSpring {
+  animation: wishCardSpring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Button Ambient Light Sweep */
+@keyframes buttonSheen {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  20%, 100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+.animate-buttonSheen {
+  animation: buttonSheen 5s infinite ease-in-out;
+}
 
 /* Floating Hearts Animation */
 @keyframes floatHeart {
@@ -139,7 +236,6 @@
   animation: slideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-
 /* Seamless Infinite Marquee for Live News Ticker */
 @keyframes marquee {
   0% {
@@ -153,6 +249,8 @@
 .animate-marquee {
   display: flex;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
   animation: marquee 24s linear infinite;
 }
 
